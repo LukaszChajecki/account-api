@@ -13,29 +13,29 @@ import java.math.RoundingMode;
 @RequiredArgsConstructor
 class ExchangeServiceImpl implements ExchangeService {
 
-	private final NbpRateRepository nbpRateRepository;
+    private final NbpRateRepository nbpRateRepository;
 
-	@Override
-	public BigDecimal exchange(final CurrencyEnum from, final CurrencyEnum to, final BigDecimal amount) {
-		return ExchangeCurrencyStrategy.from(from, to).exchange.apply(this, amount);
-	}
+    @Override
+    public BigDecimal exchange(final CurrencyEnum from, final CurrencyEnum to, BigDecimal amount) {
+        return ExchangeCurrencyStrategy.from(from, to).exchange.apply(this, amount);
+    }
 
-	BigDecimal fromPLNToUSD(final BigDecimal amount) {
-		return amount.multiply(this.getPlnToUsdRate()).setScale(2, RoundingMode.DOWN);
-	}
+    BigDecimal fromPLNToUSD(final BigDecimal amount) {
+        return amount.multiply(this.getPlnToUsdRate()).setScale(2, RoundingMode.DOWN);
+    }
 
-	BigDecimal fromUSDToPLN(final BigDecimal amount) {
-		return amount.multiply(this.getUsdToPlnRate()).setScale(2, RoundingMode.DOWN);
-	}
+    BigDecimal fromUSDToPLN(final BigDecimal amount) {
+        return amount.multiply(this.getUsdToPlnRate()).setScale(2, RoundingMode.DOWN);
+    }
 
-	private BigDecimal getPlnToUsdRate() {
-		final var usdRate = this.nbpRateRepository.findRateByCurrencyCode(CurrencyEnum.USD.name());
-		return BigDecimal.ONE.divide(usdRate, 5, RoundingMode.DOWN);
-	}
+    private BigDecimal getPlnToUsdRate() {
+        final var usdRate = this.nbpRateRepository.findRateByCurrencyCode(CurrencyEnum.USD.name());
+        return BigDecimal.ONE.divide(usdRate, 5, RoundingMode.DOWN);
+    }
 
-	private BigDecimal getUsdToPlnRate() {
-		final var usdRate = this.nbpRateRepository.findRateByCurrencyCode(CurrencyEnum.USD.name());
-		return usdRate.divide(BigDecimal.ONE, 5, RoundingMode.DOWN);
-	}
+    private BigDecimal getUsdToPlnRate() {
+        final var usdRate = this.nbpRateRepository.findRateByCurrencyCode(CurrencyEnum.USD.name());
+        return usdRate.divide(BigDecimal.ONE, 5, RoundingMode.DOWN);
+    }
 
 }
