@@ -27,7 +27,8 @@ public class ExchangeController {
     @GetMapping
     public void exchange(
             @RequestParam @NotNull final CurrencyEnum from, @NotNull @RequestParam final CurrencyEnum to,
-            @RequestParam @NotBlank final String accountId, @RequestParam @NotNull @DecimalMin(value = "0.0") final BigDecimal amount) {
+            @RequestParam @NotBlank final String accountId,
+            @RequestParam @NotNull @DecimalMin(value = "0.0", inclusive = false) final BigDecimal amount) {
         log.info("Processing exchange {} to {}, accountId: {}", from, to, accountId);
         this.accountService.exchange(accountId, from, to, amount);
     }
